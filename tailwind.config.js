@@ -8,6 +8,7 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
+        // 'pacifico' becomes the tailwind class name
         pacifico: ['Pacifico-Regular'],
       }
     },

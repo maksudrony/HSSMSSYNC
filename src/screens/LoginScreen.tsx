@@ -1,76 +1,98 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Image, KeyboardAvoidingView, Platform, Button } from 'react-native';
+import { 
+  View, Text, TextInput, TouchableOpacity, Image, 
+  KeyboardAvoidingView, Platform, Alert, ActivityIndicator 
+} from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { authService } from '../services/authService';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login'>;
 
 const LoginScreen = ({ navigation }: Props) => {
-  // State Management for our input fields
   const [enrollmentId, setEnrollmentId] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Placeholder function for our future API call
-  const handleLogin = () => {
-    console.log('Attempting login with:', enrollmentId, password);
-    // navigation.replace('Dashboard'); // We will activate this after API integration
+  const handleLogin = async () => {
+    if (!enrollmentId || !password) {
+      Alert.alert('Validation Error', 'Please enter both Enrollment ID and Password.');
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      // 1. Clean Service Call - No fetch logic, no URLs, no JSON stringifying
+      const result = await authService.login(enrollmentId, password);
+
+      // 2. Handle the domain response
+      if (result.success) {
+        Alert.alert('Success', `Welcome, ${result.employeeName}!`);
+        // navigation.replace('Dashboard');
+      } else {
+        Alert.alert('Login Failed', result.message || 'Invalid credentials.');
+      }
+    } catch (error: any) {
+      Alert.alert('Connection Error', error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    // SafeAreaView respects the notch, bg-white sets your requested background
     <SafeAreaView className="flex-1 bg-white">
-      
-      {/* KeyboardAvoidingView prevents the keyboard from hiding the inputs */}
       <KeyboardAvoidingView 
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1 justify-center px-8"
       >
-        
-        {/* Centered Image */}
-        <View className="items-center mb-4 mt-2">
+        <View className="items-center mb-6 mt-2">
           <Image 
             source={require('../assets/images/login_screen.png')}
-            className="w-[500px] h-[200px]"
+            className="w-[400px] h-[200px]" 
             resizeMode="contain"
           />
         </View>
 
-        {/* Username / Enrollment Field */}
         <View className="mb-4">
           <Text className="text-gray-700 font-semibold mb-2 ml-1">Enrollment ID</Text>
           <TextInput
             className="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-black"
             placeholder="Enter your ID (e.g., 527363)"
             placeholderTextColor="#9ca3af"
-            keyboardType="numeric" // Forces the number pad for ID
+            keyboardType="numeric"
             value={enrollmentId}
             onChangeText={setEnrollmentId}
+            editable={!isLoading}
           />
         </View>
 
-        {/* Password Field */}
         <View className="mb-8">
           <Text className="text-gray-700 font-semibold mb-2 ml-1">Password</Text>
           <TextInput
             className="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-black"
             placeholder="Enter your password"
             placeholderTextColor="#9ca3af"
-            secureTextEntry={true} // Hides the text as dots
+            secureTextEntry={true}
             value={password}
             onChangeText={setPassword}
+            editable={!isLoading}
           />
         </View>
 
-        {/* Orange Sign In Button */}
         <TouchableOpacity 
-          className="w-full bg-orange-500 py-4 rounded-xl items-center shadow-sm"
+          className={`w-full py-4 rounded-xl items-center shadow-sm ${isLoading ? 'bg-orange-300' : 'bg-orange-500'}`}
           onPress={handleLogin}
+          disabled={isLoading}
           activeOpacity={0.8}
         >
-          <Text className="text-white font-bold text-lg">Sign In</Text>
+          {isLoading ? (
+            <ActivityIndicator color="#ffffff" />
+          ) : (
+            <Text className="text-white font-bold text-lg">Sign In</Text>
+          )}
         </TouchableOpacity>
-
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
