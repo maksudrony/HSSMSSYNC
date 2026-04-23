@@ -20,6 +20,17 @@ const DashboardScreen = ({ navigation }: Props) => {
     processed: { pending: 0, process: 71, invalid: 3, total: 74 }
   };
 
+  // --- BULLETPROOF SHADOW STYLE (Cross-Platform) ---
+  // We use this because white-on-white requires strong, explicit depth.
+  const cardShadow = {
+    backgroundColor: '#ffffff',
+    elevation: 8, // ANDROID: Lifts the card up on the Z-axis
+    shadowColor: '#000000', // IOS: Shadow color
+    shadowOffset: { width: 0, height: 4 }, // IOS: Pushes shadow slightly down
+    shadowOpacity: 0.1, // IOS: Keeps the shadow soft and elegant
+    shadowRadius: 6, // IOS: Blurs the shadow edges
+  };
+
   // --- NATIVE ACTIONS ---
   const handleShutdown = () => {
     Alert.alert('Exit App!', 'Hey! Do You Want to close the AFML SMS App?', [
@@ -33,24 +44,25 @@ const DashboardScreen = ({ navigation }: Props) => {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-gray-100">
+    // Changed bg-gray-100 to bg-white for the main background
+    <SafeAreaView className="flex-1 bg-white">
       
       {/* CUSTOM HEADER WITH ICONS */}
       <View className="bg-[#e86622] flex-row items-center justify-between px-4 py-4">
         <TouchableOpacity onPress={handleShutdown}>
           <Image 
             source={require('../assets/icons/power_icon.png')} 
-            className="w-6 h-6 tint-white" // Adjust size as needed, assuming white icon
+            className="w-10 h-10 tint-white" 
             resizeMode="contain"
           />
         </TouchableOpacity>
         
-        <Text className="text-white text-xl font-bold">Sunshine App Dashboard</Text>
+        <Text className="text-white text-2xl font-bold">Sunshine App Dashboard</Text>
         
         <TouchableOpacity onPress={() => setIsMenuVisible(true)}>
           <Image 
             source={require('../assets/icons/menu_dots.png')} 
-            className="w-6 h-6 tint-white"
+            className="w-10 h-10 tint-white"
             resizeMode="contain"
           />
         </TouchableOpacity>
@@ -63,7 +75,7 @@ const DashboardScreen = ({ navigation }: Props) => {
           activeOpacity={1} 
           onPress={() => setIsMenuVisible(false)}
         >
-          <View className="bg-white rounded-lg shadow-lg w-48 p-2">
+          <View className="bg-white rounded-lg w-48 p-2" style={cardShadow}>
             <TouchableOpacity className="p-3 border-b border-gray-100" onPress={() => { setIsMenuVisible(false); Alert.alert('Check Memory'); }}>
               <Text className="text-black font-semibold">Check SMS Memory</Text>
             </TouchableOpacity>
@@ -77,8 +89,8 @@ const DashboardScreen = ({ navigation }: Props) => {
       {/* MAIN SCROLLABLE CONTENT */}
       <ScrollView contentContainerStyle={{ padding: 16 }}>
         
-        {/*TOP SERVICE CONTROL CARD WITH REFRESH ICON */}
-        <View className="bg-white rounded-2xl p-4 shadow-sm flex-row items-center justify-between mb-4">
+        {/* TOP SERVICE CONTROL CARD WITH REFRESH ICON */}
+        <View className="rounded-2xl p-4 flex-row items-center justify-between mb-4" style={cardShadow}>
           <Text className="text-black font-bold text-base">Enable SMS Service</Text>
           <View className="flex-row items-center space-x-4">
             <Switch
@@ -101,7 +113,8 @@ const DashboardScreen = ({ navigation }: Props) => {
         <View className="flex-row justify-between mb-4">
           {/* SMS Not Pass Card */}
           <TouchableOpacity 
-            className="bg-white w-[48%] rounded-2xl p-4 shadow-sm items-center justify-center"
+            className="w-[48%] rounded-2xl p-4 items-center justify-center"
+            style={cardShadow}
             onPress={() => navigation.navigate('SmsNotSync')}
           >
             <View className="h-24 w-24 mb-2 items-center justify-center">
@@ -116,7 +129,8 @@ const DashboardScreen = ({ navigation }: Props) => {
 
           {/* SMS Not Process Card */}
           <TouchableOpacity 
-            className="bg-white w-[48%] rounded-2xl p-4 shadow-sm items-center justify-center"
+            className="w-[48%] rounded-2xl p-4 items-center justify-center"
+            style={cardShadow}
             onPress={() => navigation.navigate('DataNotProcess')}
           >
             <View className="h-24 w-24 mb-2 items-center justify-center">
@@ -134,7 +148,7 @@ const DashboardScreen = ({ navigation }: Props) => {
         <View className="flex-row justify-between mb-4">
           
           {/* SMS Received Card */}
-          <View className="bg-white w-[48%] rounded-2xl p-4 shadow-sm">
+          <View className="w-[48%] rounded-2xl p-4" style={cardShadow}>
             <Text className="text-[#ff6b6b] font-bold text-sm mb-2 text-center">SMS Received:</Text>
             <View className="h-[1px] bg-black mb-2" />
             
@@ -163,7 +177,7 @@ const DashboardScreen = ({ navigation }: Props) => {
           </View>
 
           {/* Data Process Card */}
-          <View className="bg-white w-[48%] rounded-2xl p-4 shadow-sm">
+          <View className="w-[48%] rounded-2xl p-4" style={cardShadow}>
             <Text className="text-[#ff6b6b] font-bold text-sm mb-2 text-center">Data Process</Text>
             <View className="h-[1px] bg-black mb-2" />
             
@@ -193,8 +207,8 @@ const DashboardScreen = ({ navigation }: Props) => {
 
         </View>
 
-        {/* 5. BOTTOM STATUS CARD */}
-        <View className="bg-white rounded-2xl h-48 shadow-sm items-center justify-center">
+        {/* BOTTOM STATUS CARD */}
+        <View className="rounded-2xl h-48 items-center justify-center mb-10" style={cardShadow}>
           <Text className="text-[#ff6b6b] font-bold text-lg text-center px-4">
             You are connected to WiFi{'\n'}Licence Varified
           </Text>
