@@ -56,7 +56,7 @@ const LoginScreen = ({ navigation }: Props) => {
         </View>
 
         <View className="mb-4">
-          <Text className="text-gray-700 font-semibold mb-2 ml-1">Enrollment ID</Text>
+          <Text className="text-gray-700 font-semibold mb-2 ml-1">User Enroll</Text>
           <TextInput
             className="w-full bg-gray-50 border border-gray-300 rounded-xl px-4 py-3 text-black"
             placeholder="Enter your ID (e.g., 527363)"
