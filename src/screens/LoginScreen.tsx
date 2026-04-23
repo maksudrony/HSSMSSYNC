@@ -29,8 +29,8 @@ const LoginScreen = ({ navigation }: Props) => {
 
       // 2. Handle the domain response
       if (result.success) {
-        Alert.alert('Success', `Welcome, ${result.employeeName}!`);
-        // navigation.replace('Dashboard');
+        //Alert.alert('Success', `Welcome, ${result.employeeName}!`);
+        navigation.replace('Dashboard');
       } else {
         Alert.alert('Login Failed', result.message || 'Invalid credentials.');
       }

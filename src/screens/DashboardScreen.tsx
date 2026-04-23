@@ -22,7 +22,7 @@ const DashboardScreen = ({ navigation }: Props) => {
 
   // --- NATIVE ACTIONS ---
   const handleShutdown = () => {
-    Alert.alert('Exit App', 'Are you sure you want to close the Sunshine App?', [
+    Alert.alert('Exit App!', 'Hey! Do You Want to close the AFML SMS App?', [
       { text: 'Cancel', style: 'cancel' },
       { text: 'Exit', style: 'destructive', onPress: () => BackHandler.exitApp() }
     ]);
@@ -104,7 +104,7 @@ const DashboardScreen = ({ navigation }: Props) => {
             className="bg-white w-[48%] rounded-2xl p-4 shadow-sm items-center justify-center"
             onPress={() => navigation.navigate('SmsNotSync')}
           >
-            <View className="h-16 w-16 mb-2 items-center justify-center">
+            <View className="h-24 w-24 mb-2 items-center justify-center">
               <Image 
                 source={require('../assets/images/sms_not_pass.png')} 
                 className="w-full h-full" 
@@ -119,7 +119,7 @@ const DashboardScreen = ({ navigation }: Props) => {
             className="bg-white w-[48%] rounded-2xl p-4 shadow-sm items-center justify-center"
             onPress={() => navigation.navigate('DataNotProcess')}
           >
-            <View className="h-16 w-16 mb-2 items-center justify-center">
+            <View className="h-24 w-24 mb-2 items-center justify-center">
               <Image 
                 source={require('../assets/images/sms_not_process.png')} 
                 className="w-full h-full" 
@@ -130,7 +130,7 @@ const DashboardScreen = ({ navigation }: Props) => {
           </TouchableOpacity>
         </View>
 
-        {/* 4. STATISTICS CARDS */}
+        {/* STATISTICS CARDS */}
         <View className="flex-row justify-between mb-4">
           
           {/* SMS Received Card */}
