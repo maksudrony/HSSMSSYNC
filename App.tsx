@@ -22,8 +22,8 @@ const App = () => {
           
           {/* Registering each screen strictly matching our RootStackParamList */}
           <Stack.Screen name="Loading" component={LoadingScreen} />
-          <Stack.Screen name="Login" component={LoginScreen} />
-          <Stack.Screen name="Dashboard" component={DashboardScreen} />
+          <Stack.Screen name="Login" component={LoginScreen} /> 
+          <Stack.Screen name="Dashboard" component={DashboardScreen} options={{ headerShown: false }} />
           
         </Stack.Navigator>
       </NavigationContainer>
