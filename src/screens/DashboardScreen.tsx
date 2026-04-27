@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { 
   View, Text, Switch, TouchableOpacity, ScrollView, 
-  Image, BackHandler, Modal, Alert 
+  Image, BackHandler, Modal, Alert, StatusBar 
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Dashboard'>;
 
@@ -13,6 +13,9 @@ const DashboardScreen = ({ navigation }: Props) => {
   // --- UI STATE ---
   const [isSmsServiceEnabled, setIsSmsServiceEnabled] = useState(false);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
+
+  // --- DYNAMIC INSETS ---
+  const insets = useSafeAreaInsets();
 
   // --- DUMMY DATA ---
   const dummyStats = {
@@ -45,10 +48,17 @@ const DashboardScreen = ({ navigation }: Props) => {
 
   return (
     // Changed bg-gray-100 to bg-white for the main background
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1 bg-white" edges={['left', 'right', 'bottom']}>
+
+      {/* make the status bar seamless */}
+      <StatusBar 
+        translucent={true}          // Makes the status bar float above the content
+        backgroundColor="transparent" // Disables the solid status bar color
+        barStyle="light-content"     // Makes the status bar icons (time, wifi) WHITE for good contrast on orange
+      />
       
       {/* CUSTOM HEADER WITH ICONS */}
-      <View className="bg-[#e86622] flex-row items-center justify-between px-4 py-4">
+      <View className="bg-[#e86622] flex-row items-center justify-between px-4 py-4" style={{ paddingTop: insets.top + 16 }}>
         <TouchableOpacity onPress={handleShutdown}>
           <Image 
             source={require('../assets/icons/power_icon.png')} 
