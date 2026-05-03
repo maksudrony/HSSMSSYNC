@@ -7,7 +7,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../types/navigation';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import SmsAndroid from 'react-native-get-sms-android';
-import api from '../services/api'; 
+import { getDashboardStats } from '../services/dashboardService';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Dashboard'>;
 
@@ -68,10 +68,17 @@ const DashboardScreen = ({ navigation }: Props) => {
 
             messages.forEach((msg: any) => {
               const body = msg.body ? msg.body.trim().toLowerCase() : '';
-              if (body.startsWith('dlv')) depositCount++;
-              else if (body.startsWith('dpz')) deliveryCount++;
-              else invalidCount++;
+              // CORRECTED LOGIC: dlv = Delivery, dpz = Deposit
+              if (body.startsWith('dlv')) {
+                deliveryCount++;
+              } else if (body.startsWith('dpz')) {
+                depositCount++;
+              } else {
+                invalidCount++;
+              }
             });
+
+            setLocalSmsStats({ deposit: depositCount, delivery: deliveryCount, invalid: invalidCount });
 
             setLocalSmsStats({ deposit: depositCount, delivery: deliveryCount, invalid: invalidCount });
           }
@@ -81,12 +88,12 @@ const DashboardScreen = ({ navigation }: Props) => {
       }
 
       // 3. FETCH DATABASE STATS VIA API
-      const response = await api.get('/dashboard/stats');
-      if (response.data.success) {
+      const result = await getDashboardStats();
+      if (result.success) {
         setDbStats({
-          process: response.data.data.processedCount,
-          invalid: response.data.data.invalidCount,
-          totalDbCount: response.data.data.totalDbCount
+          process: result.data.processedCount,
+          invalid: result.data.invalidCount,
+          totalDbCount: result.data.totalDbCount
         });
       }
     } catch (error) {
